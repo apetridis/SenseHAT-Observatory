@@ -1,0 +1,27 @@
+[Unit]
+Description=SenseHAT Observatory sensor collector
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=sensehat-observatory
+Group=sensehat-observatory
+SupplementaryGroups=i2c input video
+EnvironmentFile=/etc/sensehat-observatory/collector.env
+WorkingDirectory=/opt/sensehat-observatory
+ExecStart=/opt/sensehat-observatory/venv/bin/python -m sensehat_observatory --config /etc/sensehat-observatory/observatory.yaml
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=45
+KillSignal=SIGTERM
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/sensehat-observatory
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+LockPersonality=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sensehat-observatory"
+version = "0.1.0"
+description = "Open-source environmental and motion monitoring for Raspberry Pi Sense HAT"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "influxdb-client>=1.48,<2",
+    "PyYAML>=6.0,<7",
+]
+license = "MIT"
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.0,<9",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "."]

@@ -1,0 +1,25 @@
+device_id: sensehat-observatory-01
+
+location:
+  name: Example location
+  building: null
+  floor: null
+  room: null
+
+sampling:
+  environment_interval_seconds: 30
+  imu_frequency_hz: 10
+
+motion:
+  movement_threshold_g: 0.25
+  aggregation_interval_seconds: 60
+
+retention:
+  environment_days: 365
+  motion_raw_days: 7
+  motion_aggregate_days: 365
+  hardware_events_days: 365
+  health_days: 30
+
+display:
+  enabled: false

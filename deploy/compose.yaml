@@ -1,0 +1,65 @@
+name: sensehat-observatory
+
+services:
+  influxdb:
+    image: influxdb:2.7.12-alpine
+    restart: unless-stopped
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: ${DOCKER_INFLUXDB_INIT_USERNAME:?Set InfluxDB username in .env}
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${DOCKER_INFLUXDB_INIT_PASSWORD:?Set InfluxDB password in .env}
+      DOCKER_INFLUXDB_INIT_ORG: ${DOCKER_INFLUXDB_INIT_ORG:?Set InfluxDB organization in .env}
+      DOCKER_INFLUXDB_INIT_BUCKET: ${DOCKER_INFLUXDB_INIT_BUCKET:-environment}
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${DOCKER_INFLUXDB_INIT_ADMIN_TOKEN:?Set InfluxDB admin token in .env}
+      DOCKER_INFLUXDB_INIT_RETENTION: 8760h
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+      - influxdb-config:/etc/influxdb2
+    ports:
+      - "${LAN_BIND_IP:?Set the local interface IPv4 address in .env}:${INFLUX_PORT:-8086}:8086"
+    healthcheck:
+      test: ["CMD", "influx", "ping", "--host", "http://localhost:8086"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - observatory
+
+  grafana:
+    image: grafana/grafana-oss:11.6.1
+    restart: unless-stopped
+    depends_on:
+      influxdb:
+        condition: service_healthy
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GF_SECURITY_ADMIN_USER:?Set Grafana username in .env}
+      GF_SECURITY_ADMIN_PASSWORD: ${GF_SECURITY_ADMIN_PASSWORD:?Set Grafana password in .env}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      INFLUX_TOKEN: ${INFLUX_TOKEN:?Set InfluxDB token in .env}
+      INFLUX_ORG: ${DOCKER_INFLUXDB_INIT_ORG:?Set InfluxDB organization in .env}
+      INFLUX_BUCKET: ${DOCKER_INFLUXDB_INIT_BUCKET:-environment}
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports:
+      - "${LAN_BIND_IP:?Set the local interface IPv4 address in .env}:${GRAFANA_PORT:-3000}:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/api/health >/dev/null || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - observatory
+
+volumes:
+  influxdb-data:
+  influxdb-config:
+  grafana-data:
+
+networks:
+  observatory:
+    driver: bridge

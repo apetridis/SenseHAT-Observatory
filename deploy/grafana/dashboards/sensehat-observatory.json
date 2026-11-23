@@ -1,0 +1,1723 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Open-source environmental and motion monitoring for Raspberry Pi Sense HAT.",
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 2,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "id": 100,
+      "title": "Overview",
+      "type": "row",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "panels": []
+    },
+    {
+      "id": 1,
+      "title": "Temperature",
+      "description": "Most recent temperature from the humidity sensor.",
+      "type": "stat",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 20
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "blue",
+                "value": -10
+              },
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "orange",
+                "value": 30
+              },
+              {
+                "color": "red",
+                "value": 40
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"environment\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"environment\")\n  |> filter(fn: (r) => r[\"_field\"] == \"temperature_humidity_c\")\n  |> last()",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Relative humidity",
+      "description": "Most recent relative humidity.",
+      "type": "stat",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 4,
+        "y": 1
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 20
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "blue",
+                "value": 30
+              },
+              {
+                "color": "green",
+                "value": 60
+              },
+              {
+                "color": "orange",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"environment\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"environment\")\n  |> filter(fn: (r) => r[\"_field\"] == \"relative_humidity_percent\")\n  |> last()",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Atmospheric pressure",
+      "description": "Most recent atmospheric pressure.",
+      "type": "stat",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 8,
+        "y": 1
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "pressurehpa",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 20
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 950
+              },
+              {
+                "color": "red",
+                "value": 1050
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"environment\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"environment\")\n  |> filter(fn: (r) => r[\"_field\"] == \"pressure_hpa\")\n  |> last()",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Dew point",
+      "description": "Most recent calculated dew point.",
+      "type": "stat",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 12,
+        "y": 1
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 20
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"environment\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"environment\")\n  |> filter(fn: (r) => r[\"_field\"] == \"dew_point_c\")\n  |> last()",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Collector status",
+      "description": "Collector-reported status.",
+      "type": "stat",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 16,
+        "y": 1
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "string",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 20
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"health\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"collector_health\")\n  |> filter(fn: (r) => r[\"_field\"] == \"status\")\n  |> last()\n  |> map(fn: (r) => ({r with _value: if now() - r._time > 90s then \"offline\" else r._value}))",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Last sensor update",
+      "description": "Timestamp of the latest environment sample.",
+      "type": "stat",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 4,
+        "x": 20,
+        "y": 1
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "dateTimeAsIso",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 20
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"environment\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"environment\")\n  |> filter(fn: (r) => r[\"_field\"] == \"temperature_humidity_c\")\n  |> last()\n  |> map(fn: (r) => ({r with _value: int(v: r._time) / 1000000}))",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 101,
+      "title": "Environmental monitoring",
+      "type": "row",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 6
+      },
+      "panels": []
+    },
+    {
+      "id": 7,
+      "title": "Temperature history",
+      "description": "Humidity sensor temperature.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 7
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisLabel": "\u00b0C",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"environment\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"environment\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /temperature_humidity_c/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Temperature sensor comparison",
+      "description": "Humidity and pressure sensor temperatures.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 7
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisLabel": "\u00b0C",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"environment\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"environment\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /temperature_(humidity|pressure)_c/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Relative humidity history",
+      "description": "Relative humidity.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 14
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisLabel": "%",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"environment\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"environment\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /relative_humidity_percent/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Atmospheric pressure history",
+      "description": "Atmospheric pressure in hPa.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 14
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "pressurehpa",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisLabel": "hPa",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"environment\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"environment\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /pressure_hpa/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "title": "Dew point",
+      "description": "Calculated dew point in \u00b0C.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 21
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisLabel": "\u00b0C",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"environment\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"environment\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /dew_point_c/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "title": "Absolute humidity",
+      "description": "Absolute humidity in grams per cubic metre (g/m\u00b3).",
+      "type": "timeseries",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 21
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisLabel": "g/m\u00b3",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"environment\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"environment\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /absolute_humidity_g_m3/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "title": "Daily temperature minimum / maximum / average",
+      "description": "Daily windows summarize minimum, maximum, and average temperature from both environmental sensors.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 28
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisLabel": "\u00b0C",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"environment\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"environment\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /temperature_(humidity|pressure)_c/)\n  |> aggregateWindow(every: 1d, fn: min, createEmpty: false)\n  |> yield(name: \"daily_min\")\nfrom(bucket: \"environment\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"environment\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /temperature_(humidity|pressure)_c/)\n  |> aggregateWindow(every: 1d, fn: max, createEmpty: false)\n  |> yield(name: \"daily_max\")\nfrom(bucket: \"environment\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"environment\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /temperature_(humidity|pressure)_c/)\n  |> aggregateWindow(every: 1d, fn: mean, createEmpty: false)\n  |> yield(name: \"daily_mean\")",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "title": "Daily humidity minimum / maximum / average",
+      "description": "Daily windows summarize minimum, maximum, and average relative humidity.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 28
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisLabel": "%",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"environment\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"environment\")\n  |> filter(fn: (r) => r[\"_field\"] == \"relative_humidity_percent\")\n  |> aggregateWindow(every: 1d, fn: min, createEmpty: false)\n  |> yield(name: \"daily_min\")\nfrom(bucket: \"environment\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"environment\")\n  |> filter(fn: (r) => r[\"_field\"] == \"relative_humidity_percent\")\n  |> aggregateWindow(every: 1d, fn: max, createEmpty: false)\n  |> yield(name: \"daily_max\")\nfrom(bucket: \"environment\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"environment\")\n  |> filter(fn: (r) => r[\"_field\"] == \"relative_humidity_percent\")\n  |> aggregateWindow(every: 1d, fn: mean, createEmpty: false)\n  |> yield(name: \"daily_mean\")",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "title": "Daily pressure minimum / maximum / average",
+      "description": "Daily windows summarize minimum, maximum, and average atmospheric pressure.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 35
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "pressurehpa",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisLabel": "hPa",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"environment\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"environment\")\n  |> filter(fn: (r) => r[\"_field\"] == \"pressure_hpa\")\n  |> aggregateWindow(every: 1d, fn: min, createEmpty: false)\n  |> yield(name: \"daily_min\")\nfrom(bucket: \"environment\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"environment\")\n  |> filter(fn: (r) => r[\"_field\"] == \"pressure_hpa\")\n  |> aggregateWindow(every: 1d, fn: max, createEmpty: false)\n  |> yield(name: \"daily_max\")\nfrom(bucket: \"environment\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"environment\")\n  |> filter(fn: (r) => r[\"_field\"] == \"pressure_hpa\")\n  |> aggregateWindow(every: 1d, fn: mean, createEmpty: false)\n  |> yield(name: \"daily_mean\")",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "title": "Temperature difference (humidity - pressure sensor)",
+      "description": "Humidity-sensor temperature minus pressure-sensor temperature.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 35
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisLabel": "\u00b0C",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"environment\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"environment\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /temperature_difference_c/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 102,
+      "title": "Motion monitoring",
+      "type": "row",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 43
+      },
+      "panels": []
+    },
+    {
+      "id": 17,
+      "title": "Accelerometer X / Y / Z (window mean)",
+      "description": "Mean acceleration in g; raw samples are retained for the configured short-term period.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 44
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "accelerationg",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisLabel": "g",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"motion_aggregate\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"motion_aggregate\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /acceleration_[xyz]_g_mean/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "title": "Gyroscope X / Y / Z (window mean)",
+      "description": "Mean angular velocity in radians/second.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 44
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "radians",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisLabel": "rad/s",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"motion_aggregate\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"motion_aggregate\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /gyroscope_[xyz]_rad_s_mean/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "title": "Magnetometer X / Y / Z (window mean)",
+      "description": "Mean magnetic field in microtesla.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 51
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "microtesla",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisLabel": "\u00b5T",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"motion_aggregate\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"motion_aggregate\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /magnetometer_[xyz]_ut_mean/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "title": "Pitch / roll / yaw (window mean)",
+      "description": "Mean orientation angles in degrees.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 51
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "degree",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisLabel": "\u00b0",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"motion_aggregate\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"motion_aggregate\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /(pitch|roll|yaw)_deg_mean/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "title": "Compass heading",
+      "description": "Compass heading in degrees.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 58
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "degree",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisLabel": "\u00b0",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"motion_aggregate\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"motion_aggregate\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /compass_heading_deg_mean/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "title": "Movement detection",
+      "description": "True indicates an acceleration change exceeding the configured threshold.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 12,
+        "y": 58
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisLabel": "Detection (1=yes)",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"motion_aggregate\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"motion_aggregate\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /movement_detected/)\n  |> map(fn: (r) => ({r with _value: if r._value then 1.0 else 0.0}))\n  |> yield(name: \"mean\")",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "title": "Raw 10 Hz accelerometer (short-term retention)",
+      "description": "High-resolution raw accelerometer samples. Raw IMU records expire after the configured retention period.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 65
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "accelerationg",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisLabel": "g",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"motion_raw\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"motion\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /acceleration_[xyz]_g/)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 103,
+      "title": "Hardware and collector health",
+      "type": "row",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 72
+      },
+      "panels": []
+    },
+    {
+      "id": 24,
+      "title": "Joystick, movement and orientation events",
+      "description": "Hardware events include joystick press/release, movement detection and orientation changes.",
+      "type": "table",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 16,
+        "x": 0,
+        "y": 73
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisLabel": "Value",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false,
+          "reducer": [
+            "count"
+          ],
+          "fields": ""
+        }
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"events\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"hardware_events\")\n  |> pivot(rowKey: [\"_time\", \"device_id\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> sort(columns: [\"_time\"], desc: true)",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "title": "Sensor errors",
+      "description": "Cumulative sensor read errors since collector restart.",
+      "type": "stat",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 73
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 20
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"health\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"collector_health\")\n  |> filter(fn: (r) => r[\"_field\"] == \"sensor_errors\")\n  |> last()",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "title": "Dropped writes",
+      "description": "Points discarded after queue overflow or exhausted write retries.",
+      "type": "stat",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 73
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 20
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"health\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"collector_health\")\n  |> filter(fn: (r) => r[\"_field\"] == \"dropped_points\")\n  |> last()",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "title": "Data collection status",
+      "description": "Collector status: ok, degraded, or stopping.",
+      "type": "stat",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 16,
+        "y": 77
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "string",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "fillOpacity": 20
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"health\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"collector_health\")\n  |> filter(fn: (r) => r[\"_field\"] == \"status\")\n  |> last()\n  |> map(fn: (r) => ({r with _value: if now() - r._time > 90s then \"offline\" else r._value}))",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 28,
+      "title": "Writer queue depth",
+      "description": "Points waiting to be written to InfluxDB.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 0,
+        "y": 81
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisLabel": "Value",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"health\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"collector_health\")\n  |> filter(fn: (r) => r[\"_field\"] == \"queue_depth\")\n  |> last()",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    },
+    {
+      "id": 29,
+      "title": "InfluxDB write errors",
+      "description": "Cumulative failed write attempts since collector restart.",
+      "type": "timeseries",
+      "datasource": {
+        "type": "influxdb",
+        "uid": "sensehat-influxdb"
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 8,
+        "y": 81
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "showPoints": "never",
+            "spanNulls": false,
+            "axisLabel": "Value",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "query": "from(bucket: \"health\")\n  |> range(start: -30d)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"collector_health\")\n  |> filter(fn: (r) => r[\"_field\"] == \"write_errors\")\n  |> last()",
+          "refId": "A",
+          "queryType": "flux"
+        }
+      ]
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "tags": [
+    "sense-hat",
+    "environment",
+    "motion",
+    "raspberry-pi"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m"
+    ],
+    "time_options": [
+      "1h",
+      "6h",
+      "24h",
+      "7d",
+      "30d",
+      "now-1h",
+      "now-6h",
+      "now-24h",
+      "now-7d",
+      "now-30d"
+    ]
+  },
+  "timezone": "browser",
+  "title": "SenseHAT Observatory",
+  "uid": "sensehat-observatory",
+  "version": 1,
+  "weekStart": ""
+}
