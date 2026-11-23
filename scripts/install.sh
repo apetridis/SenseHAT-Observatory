@@ -30,20 +30,26 @@ require_raspberry_pi() {
 install_prerequisites() {
   apt-get update
   DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    docker.io python3 python3-venv python3-sense-hat \
-    iproute2 openssl ca-certificates
-  if ! docker compose version >/dev/null 2>&1; then
-    local compose_package=""
-    for candidate in docker-compose-v2 docker-compose-plugin; do
-      if apt-cache show "$candidate" >/dev/null 2>&1; then
-        compose_package="$candidate"
-        break
-      fi
-    done
-    [[ -n "$compose_package" ]] || fail "No Docker Compose v2 package is available from configured Raspberry Pi OS repositories."
-    DEBIAN_FRONTEND=noninteractive apt-get install -y "$compose_package"
-  fi
-  docker compose version >/dev/null || fail "Docker Compose v2 is unavailable."
+    curl gnupg ca-certificates \
+    python3 python3-venv python3-sense-hat iproute2 openssl
+
+  local architecture suite
+  architecture="$(dpkg --print-architecture)"
+  [[ "$architecture" == "arm64" ]] || fail "Docker's Debian repository requires arm64; detected $architecture."
+  suite="${VERSION_CODENAME:-}"
+  [[ "$suite" =~ ^[a-z][a-z0-9.-]*$ ]] || fail "Cannot determine a supported Debian release codename from /etc/os-release."
+
+  install -d -m 0755 /etc/apt/keyrings
+  curl -fsSL https://download.docker.com/linux/debian/gpg |
+    gpg --dearmor --yes -o /etc/apt/keyrings/docker.gpg
+  chmod a+r /etc/apt/keyrings/docker.gpg
+  printf 'deb [arch=%s signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian %s stable\n' \
+    "$architecture" "$suite" >/etc/apt/sources.list.d/docker.list
+
+  apt-get update
+  DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    docker-ce docker-ce-cli containerd.io docker-compose-plugin
+  docker compose version >/dev/null 2>&1 || fail "Docker Compose v2 is unavailable after installing docker-compose-plugin."
   systemctl enable --now docker.service
 }
 
