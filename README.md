@@ -53,8 +53,8 @@ included in health telemetry.
 - Raspberry Pi running 64-bit Raspberry Pi OS (Debian-based, `aarch64`), with a
   working network connection.
 - Official Raspberry Pi Sense HAT installed and attached.
-- Docker Engine and the Docker Compose v2 plugin (the installer attempts to
-  install these from Raspberry Pi OS packages).
+- Docker Engine and the Docker Compose v2 plugin (the installer installs these
+  from Docker's official Debian APT repository).
 - I²C enabled and `/dev/i2c-1` available; joystick input devices available
   under `/dev/input`.
 - A local IPv4 address assigned to the Pi and reachable from the clients that
@@ -85,7 +85,8 @@ the URL for another published clone.
 The installer:
 
 1. Verifies Raspberry Pi OS and Sense HAT device access.
-2. Installs Docker/Compose and the OS-provided `python3-sense-hat` package.
+2. Installs Docker Engine, CLI and Compose v2 from Docker's official Debian APT
+   repository, along with the OS-provided `python3-sense-hat` package.
 3. Creates a mode-600 `.env` containing generated InfluxDB and Grafana
    credentials if one does not already exist. Existing credentials are not
    overwritten.
