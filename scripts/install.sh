@@ -47,6 +47,9 @@ install_prerequisites() {
     "$architecture" "$suite" >/etc/apt/sources.list.d/docker.list
 
   apt-get update
+  if dpkg-query -W -f='${Status}' docker-buildx 2>/dev/null | grep -q '^install ok installed$'; then
+    DEBIAN_FRONTEND=noninteractive apt-get remove -y docker-buildx
+  fi
   DEBIAN_FRONTEND=noninteractive apt-get install -y \
     docker-ce docker-ce-cli containerd.io docker-compose-plugin
   docker compose version >/dev/null 2>&1 || fail "Docker Compose v2 is unavailable after installing docker-compose-plugin."

@@ -86,7 +86,9 @@ The installer:
 
 1. Verifies Raspberry Pi OS and Sense HAT device access.
 2. Installs Docker Engine, CLI and Compose v2 from Docker's official Debian APT
-   repository, along with the OS-provided `python3-sense-hat` package.
+   repository, replacing the Raspberry Pi OS `docker-buildx` package if it is
+   installed to prevent a CLI-plugin file conflict, along with the OS-provided
+   `python3-sense-hat` package.
 3. Creates a mode-600 `.env` containing generated InfluxDB and Grafana
    credentials if one does not already exist. Existing credentials are not
    overwritten.
